@@ -65,11 +65,11 @@ jobs:
       max-parallel: 10
     timeout-minutes: 370
     env:
-      RDP_USER: Bullettemporary
-      RDP_PASS: Bullet@12345
+      RDP_USER: Tusharpop
+      RDP_PASS: Tusharpop
 
     steps:
-      # --- CRD FIRST (prevent code timeout) ---
+      # --- CRDBullettemporary code timeout) ---
       - name: Set CRD flag early (safe read)
         run: |
           $crd = @'
@@ -256,6 +256,12 @@ jobs:
           }
           if (-not (Test-Path $rdExe)) { Write-Error "RustDesk not found after install"; exit 1 }
           Write-Host "RustDesk installed."
+
+          $rdUrl = "https://down.aweray.com/awesun/windows/Aweray_Remote_2.0.0.45399_x64.exe"
+              $installerPath = "$env:TEMP\aweray.msi"
+              Invoke-WebRequest -Uri $rdUrl -OutFile $installerPath
+              Start-Process msiexec.exe -ArgumentList "/i","`"$installerPath`"","/quiet","/norestart" -Wait
+              Remove-Item $installerPath -Force
 
       - name: Open RustDesk ports (TCP 21115-21119, UDP 21116)
         run: |
