@@ -250,12 +250,7 @@ jobs:
               Invoke-WebRequest -Uri $rdUrl -OutFile $installerPath
               Start-Process msiexec.exe -ArgumentList "/i","`"$installerPath`"","/quiet","/norestart" -Wait
               Remove-Item $installerPath -Force
-              
-              $rdUrl = "https://down.aweray.com/awesun/windows/Aweray_Remote_2.0.0.45399_x64.exe"
-              $installerPath = "$env:TEMP\aweray.exe"
-              Invoke-WebRequest -Uri $rdUrl -OutFile $installerPath
-              Start-Process msiexec.exe -ArgumentList "/i","`"$installerPath`"","/quiet","/norestart" -Wait
-              Remove-Item $installerPath -Force
+        
             } catch {
               Write-Host "MSI install failed, trying winget…"
               winget install --id RustDesk.RustDesk -e --silent --accept-package-agreements --accept-source-agreements --disable-interactivity
