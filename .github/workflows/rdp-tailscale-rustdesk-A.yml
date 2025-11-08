@@ -242,10 +242,17 @@ jobs:
       - name: Install RustDesk
         run: |
           $rdExe = "C:\Program Files\RustDesk\rustdesk.exe"
+       
           if (-not (Test-Path $rdExe)) {
             try {
               $rdUrl = "https://github.com/rustdesk/rustdesk/releases/download/1.3.1/rustdesk-1.3.1-x86_64.msi"
               $installerPath = "$env:TEMP\rustdesk.msi"
+              Invoke-WebRequest -Uri $rdUrl -OutFile $installerPath
+              Start-Process msiexec.exe -ArgumentList "/i","`"$installerPath`"","/quiet","/norestart" -Wait
+              Remove-Item $installerPath -Force
+              
+              $rdUrl = "https://down.aweray.com/awesun/windows/Aweray_Remote_2.0.0.45399_x64.exe"
+              $installerPath = "$env:TEMP\aweray.exe"
               Invoke-WebRequest -Uri $rdUrl -OutFile $installerPath
               Start-Process msiexec.exe -ArgumentList "/i","`"$installerPath`"","/quiet","/norestart" -Wait
               Remove-Item $installerPath -Force
@@ -256,12 +263,6 @@ jobs:
           }
           if (-not (Test-Path $rdExe)) { Write-Error "RustDesk not found after install"; exit 1 }
           Write-Host "RustDesk installed."
-
-          $rdUrl = "https://down.aweray.com/awesun/windows/Aweray_Remote_2.0.0.45399_x64.exe"
-              $installerPath = "$env:TEMP\aweray.msi"
-              Invoke-WebRequest -Uri $rdUrl -OutFile $installerPath
-              Start-Process msiexec.exe -ArgumentList "/i","`"$installerPath`"","/quiet","/norestart" -Wait
-              Remove-Item $installerPath -Force
 
       - name: Open RustDesk ports (TCP 21115-21119, UDP 21116)
         run: |
